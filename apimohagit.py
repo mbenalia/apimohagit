@@ -27,3 +27,6 @@ def predict(iris: IrisRequest):
 @app.get("/status")
 def status():
     return {"message": "API is up and running!"}
+@app.get("/quentin")
+def status():
+    return {"message": "L'expert excel est là!"}
