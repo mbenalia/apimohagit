@@ -5,26 +5,20 @@ import joblib
 # Créer une instance de FastAPI
 app = FastAPI()
 
+# Charger le modèle globalement lors du démarrage de l'application
+model = joblib.load("iris_regressor.pkl")
+
 # Définir un modèle de requête
 class IrisRequest(BaseModel):
     sepal_width: float
     petal_length: float
     petal_width: float
 
-# Charger le modèle lors du démarrage de l'application
-@app.on_event("startup")
-def load_model():
-    global model
-    model = joblib.load("iris_regressor.pkl")
-
 # Point de terminaison pour faire une prédiction
 @app.post("/predict")
 def predict(iris: IrisRequest):
-    # Convertir la requête en un tableau NumPy
-    data = [[iris.sepal_width, iris.petal_length, iris.petal_width]]
-
     # Faire une prédiction
-    prediction = model.predict(data)
+    prediction = model.predict([[iris.sepal_width, iris.petal_length, iris.petal_width]])
 
     # Retourner la prédiction
     return {"predicted_sepal_length": prediction[0]}
